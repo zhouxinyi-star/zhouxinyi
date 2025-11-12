@@ -1,0 +1,259 @@
+# Python 基础知识总结（11.11）
+
+## 文件概览
+- `101.py` - 基础语法示例
+- `gim.py` - API调用示例
+
+---
+
+## 1. 模块导入（Import）
+
+### 标准库导入
+```python
+from tkinter import YView  # 从tkinter模块导入YView类
+```
+
+### 第三方库导入
+```python
+import requests  # 导入requests库（用于HTTP请求）
+import json      # 导入json库（用于JSON数据处理）
+```
+
+**知识点：**
+- `import 模块名` - 导入整个模块
+- `from 模块名 import 对象名` - 从模块中导入特定对象
+- Python标准库无需安装，第三方库需要pip安装
+
+---
+
+## 2. 变量赋值
+
+### 字符串变量
+```python
+x = "1"  # 字符串类型（str）
+y = "2"  # 字符串类型（str）
+```
+
+**知识点：**
+- Python是动态类型语言，无需声明变量类型
+- 字符串用引号（单引号或双引号）包裹
+- 变量名遵循命名规范（小写字母、下划线等）
+
+---
+
+## 3. 字符串操作
+
+### 字符串拼接
+```python
+x = "1"
+y = "2"
+print(x + y)  # 输出："12"（字符串拼接，不是数学加法）
+```
+
+**重要区别：**
+```python
+# 字符串拼接
+x = "1"
+y = "2"
+print(x + y)  # 输出："12"
+
+# 数字相加
+x = 1
+y = 2
+print(x + y)  # 输出：3
+```
+
+---
+
+## 4. 函数定义（Function Definition）
+
+### 定义函数
+```python
+def call_zhipu_api(messages, model="glm-4-flash"):
+    # 函数体
+    pass
+```
+
+**知识点：**
+- `def` 关键字用于定义函数
+- 函数名遵循命名规范（小写字母、下划线）
+- 参数可以有默认值（如 `model="glm-4-flash"`）
+- 函数体需要缩进（通常4个空格）
+
+---
+
+## 5. 字典（Dictionary）
+
+### 字典的创建和使用
+```python
+headers = {
+    "Authorization": "3c5630491548431d8eb87422cd9bbf81.Wm2BfMEkf6STJARm",
+    "Content-Type": "application/json"
+}
+
+data = {
+    "model": model,
+    "messages": messages,
+    "temperature": 1.0
+}
+```
+
+**知识点：**
+- 字典用花括号 `{}` 创建
+- 键值对格式：`"键": 值`
+- 键通常是字符串，值可以是任意类型
+- 访问值：`字典名["键"]` 或 `字典名.get("键")`
+
+### 字典列表
+```python
+messages = [
+    {"role": "user", "content": "你好，请介绍一下自己"}
+]
+```
+
+**知识点：**
+- 列表中可以包含字典
+- 列表用方括号 `[]` 创建
+- 列表元素用逗号分隔
+
+---
+
+## 6. HTTP请求（API调用）
+
+### POST请求
+```python
+response = requests.post(url, headers=headers, json=data)
+```
+
+**知识点：**
+- `requests.post()` - 发送POST请求
+- `url` - 请求的URL地址
+- `headers` - 请求头（包含认证信息等）
+- `json=data` - 将字典转换为JSON格式发送
+
+---
+
+## 7. 条件语句（Conditional Statement）
+
+### if-else语句
+```python
+if response.status_code == 200:
+    return response.json()
+else:
+    raise Exception(f"API调用失败: {response.status_code}, {response.text}")
+```
+
+**知识点：**
+- `if` 关键字用于条件判断
+- `==` 是相等比较运算符
+- `else` 处理不满足条件的情况
+- 代码块需要缩进
+- `raise Exception()` - 抛出异常
+
+---
+
+## 8. 异常处理（Exception）
+
+### 抛出异常
+```python
+raise Exception(f"API调用失败: {response.status_code}, {response.text}")
+```
+
+**知识点：**
+- `raise` 关键字用于抛出异常
+- `Exception` 是异常类
+- f-string格式化字符串（Python 3.6+）
+
+---
+
+## 9. 返回值（Return）
+
+### 函数返回值
+```python
+return response.json()  # 返回JSON解析后的数据
+```
+
+**知识点：**
+- `return` 关键字用于返回函数结果
+- `response.json()` - 将HTTP响应解析为Python字典
+
+---
+
+## 10. 函数调用和字典访问
+
+### 调用函数
+```python
+result = call_zhipu_api(messages)
+```
+
+### 访问嵌套字典
+```python
+print(result['choices'][0]['message']['content'])
+```
+
+**知识点：**
+- 函数调用：`函数名(参数)`
+- 字典访问：`字典['键']`
+- 列表访问：`列表[索引]`（索引从0开始）
+- 嵌套访问：可以连续使用 `[]` 访问嵌套结构
+
+---
+
+## 11. 输出函数（Print）
+
+### 基本用法
+```python
+print(x + y)  # 输出字符串拼接结果
+print(result['choices'][0]['message']['content'])  # 输出API返回的内容
+```
+
+**知识点：**
+- `print()` 是Python内置函数
+- 用于在控制台输出信息
+- 可以输出字符串、数字、变量等
+
+---
+
+## 12. 代码风格
+
+### 空行
+- 空行用于分隔代码块，提高可读性
+- 函数定义前后建议使用空行
+
+### 缩进
+- Python使用缩进表示代码块
+- 通常使用4个空格（不是Tab）
+- 同一代码块必须保持相同缩进
+
+---
+
+## 总结
+
+### 基础概念
+1. ✅ 模块导入（import）
+2. ✅ 变量赋值
+3. ✅ 字符串操作和拼接
+4. ✅ 函数定义和调用
+5. ✅ 字典和列表的使用
+6. ✅ 条件语句（if-else）
+7. ✅ 异常处理（raise）
+8. ✅ 返回值（return）
+9. ✅ 嵌套数据结构访问
+10. ✅ 输出函数（print）
+
+### 实际应用
+- HTTP API调用
+- JSON数据处理
+- 函数封装和代码复用
+
+---
+
+## 注意事项
+
+1. **字符串 vs 数字**：`"1" + "2"` 结果是 `"12"`，而 `1 + 2` 结果是 `3`
+2. **缩进很重要**：Python依赖缩进来识别代码块
+3. **字典键访问**：使用 `字典['键']` 时，键必须存在，否则会报错
+4. **API密钥安全**：实际项目中不要将API密钥硬编码在代码中，应使用环境变量
+
+
+
