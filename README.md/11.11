@@ -3,6 +3,7 @@
 ## 文件概览
 - `101.py` - 基础语法示例
 - `gim.py` - API调用示例
+- `gim05.py` - 文件操作、JSON处理、角色系统示例
 
 ---
 
@@ -11,12 +12,13 @@
 ### 标准库导入
 ```python
 from tkinter import YView  # 从tkinter模块导入YView类
+import os  # 导入os模块（用于文件操作）
+import json  # 导入json模块（用于JSON数据处理）
 ```
 
 ### 第三方库导入
 ```python
 import requests  # 导入requests库（用于HTTP请求）
-import json      # 导入json库（用于JSON数据处理）
 ```
 
 **知识点：**
@@ -34,10 +36,19 @@ x = "1"  # 字符串类型（str）
 y = "2"  # 字符串类型（str）
 ```
 
+### 常量定义
+```python
+MEMORY_FOLDER = "4.2_memory_clonebot"  # 常量（通常使用大写）
+ROLE_MEMORY_MAP = {
+    "小丸子": "hostage_memory.json"
+}
+```
+
 **知识点：**
 - Python是动态类型语言，无需声明变量类型
 - 字符串用引号（单引号或双引号）包裹
 - 变量名遵循命名规范（小写字母、下划线等）
+- 常量通常使用全大写字母
 
 ---
 
@@ -48,6 +59,23 @@ y = "2"  # 字符串类型（str）
 x = "1"
 y = "2"
 print(x + y)  # 输出："12"（字符串拼接，不是数学加法）
+```
+
+### 字符串方法
+```python
+text = "  hello world  "
+text.strip()  # 去除首尾空白字符："hello world"
+text.replace(" ", "")  # 替换字符："helloworld"
+text.replace("！", "").replace("!", "")  # 链式替换
+```
+
+### 多行字符串（三引号）
+```python
+portrait = """
+WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWMWWWWWWWWWWWWWWWWW
+WWWWWWWWWWWWWWWWWMWWWWWWWWWWNNNNWWWWWWWWWWWWWWWWWW
+...
+"""
 ```
 
 **重要区别：**
@@ -74,11 +102,29 @@ def call_zhipu_api(messages, model="glm-4-flash"):
     pass
 ```
 
+### 函数文档字符串（Docstring）
+```python
+def roles(role_name):
+    """
+    角色系统：整合人格设定和记忆加载
+    
+    这个函数会：
+    1. 加载角色的外部记忆文件（如果存在）
+    2. 获取角色的基础人格设定
+    3. 整合成一个完整的、结构化的角色 prompt
+    
+    返回：完整的角色设定字符串，包含记忆和人格
+    """
+    # 函数体
+    return role_system
+```
+
 **知识点：**
 - `def` 关键字用于定义函数
 - 函数名遵循命名规范（小写字母、下划线）
 - 参数可以有默认值（如 `model="glm-4-flash"`）
 - 函数体需要缩进（通常4个空格）
+- 使用三引号编写函数文档字符串，说明函数功能
 
 ---
 
@@ -87,15 +133,31 @@ def call_zhipu_api(messages, model="glm-4-flash"):
 ### 字典的创建和使用
 ```python
 headers = {
-    "Authorization": "3c5630491548431d8eb87422cd9bbf81.Wm2BfMEkf6STJARm",
+    "Authorization": "1732aa9845ec4ce09dca7cd10e02d209.dA36k1HPTnFk7cLU",
     "Content-Type": "application/json"
 }
 
 data = {
     "model": model,
     "messages": messages,
-    "temperature": 1.0
+    "temperature": 0.5   
 }
+```
+
+### 字典的get()方法
+```python
+memory_file = ROLE_MEMORY_MAP.get(role_name)  # 安全获取值，不存在返回None
+personality = role_personality.get(role_name, "默认值")  # 不存在时返回默认值
+memory_content = data.get('content', str(data))  # 获取键值，不存在时返回默认值
+```
+
+### 字典列表
+```python
+messages = [
+    {"role": "user", "content": "你好，请介绍一下自己"}
+]
+
+conversation_history = [{"role": "system", "content": system_message}]
 ```
 
 **知识点：**
@@ -103,26 +165,153 @@ data = {
 - 键值对格式：`"键": 值`
 - 键通常是字符串，值可以是任意类型
 - 访问值：`字典名["键"]` 或 `字典名.get("键")`
-
-### 字典列表
-```python
-messages = [
-    {"role": "user", "content": "你好，请介绍一下自己"}
-]
-```
-
-**知识点：**
+- `get()` 方法更安全，键不存在时不会报错，可以设置默认值
 - 列表中可以包含字典
-- 列表用方括号 `[]` 创建
-- 列表元素用逗号分隔
 
 ---
 
-## 6. HTTP请求（API调用）
+## 6. 文件操作（File Operations）
+
+### 文件路径操作
+```python
+import os
+
+# 路径拼接
+memory_path = os.path.join(MEMORY_FOLDER, memory_file)
+# 结果：4.2_memory_clonebot/hostage_memory.json
+
+# 检查文件是否存在
+if os.path.exists(memory_path):
+    # 文件存在时的操作
+    pass
+```
+
+### 文件读取（with语句）
+```python
+# 使用with语句自动管理文件，确保文件正确关闭
+with open(memory_path, 'r', encoding='utf-8') as f:
+    data = json.load(f)  # 读取JSON文件
+```
+
+**知识点：**
+- `os.path.join()` - 跨平台路径拼接
+- `os.path.exists()` - 检查文件或目录是否存在
+- `with open()` - 上下文管理器，自动关闭文件
+- `encoding='utf-8'` - 指定文件编码，避免中文乱码
+
+---
+
+## 7. JSON数据处理
+
+### JSON文件读取
+```python
+import json
+
+with open(memory_path, 'r', encoding='utf-8') as f:
+    data = json.load(f)  # 从文件读取JSON数据
+```
+
+### JSON数据解析
+```python
+# 处理数组格式：[{ "content": "..." }, { "content": "..." }, ...]
+if isinstance(data, list):
+    contents = [item.get('content', '') for item in data if isinstance(item, dict) and item.get('content')]
+    memory_content = '\n'.join(contents)
+
+# 处理字典格式：{ "content": "..." }
+elif isinstance(data, dict):
+    memory_content = data.get('content', str(data))
+```
+
+**知识点：**
+- `json.load()` - 从文件读取JSON数据
+- `json.loads()` - 从字符串解析JSON数据
+- `isinstance()` - 检查对象类型
+- 列表推导式用于提取数据
+
+---
+
+## 8. 类型检查（Type Checking）
+
+### isinstance()函数
+```python
+# 检查数据类型
+if isinstance(data, list):
+    # data是列表类型
+    pass
+elif isinstance(data, dict):
+    # data是字典类型
+    pass
+else:
+    # 其他类型
+    pass
+```
+
+**知识点：**
+- `isinstance(对象, 类型)` - 检查对象是否是指定类型
+- 返回 `True` 或 `False`
+- 比 `type()` 更推荐使用
+
+---
+
+## 9. 列表推导式（List Comprehension）
+
+### 基本用法
+```python
+# 从列表中提取特定字段
+contents = [item.get('content', '') for item in data 
+            if isinstance(item, dict) and item.get('content')]
+```
+
+**知识点：**
+- 列表推导式：`[表达式 for 变量 in 可迭代对象 if 条件]`
+- 简洁高效，一行代码完成循环和过滤
+- 可以包含条件判断
+
+---
+
+## 10. 字符串方法
+
+### strip() - 去除首尾空白
+```python
+text = "  hello  "
+text.strip()  # "hello"
+```
+
+### replace() - 替换字符
+```python
+reply_cleaned = assistant_reply.strip().replace(" ", "").replace("！", "").replace("!", "")
+# 链式调用，依次去除空格、中文感叹号、英文感叹号
+```
+
+### join() - 连接字符串
+```python
+contents = ["你好", "世界", "Python"]
+result = '\n'.join(contents)  # 用换行符连接："你好\n世界\nPython"
+role_system = "\n\n".join(role_prompt_parts)  # 用双换行符连接
+```
+
+**知识点：**
+- `strip()` - 去除首尾空白字符
+- `replace(old, new)` - 替换字符串中的字符
+- `join()` - 用指定字符连接字符串列表
+- 可以链式调用多个方法
+
+---
+
+## 11. HTTP请求（API调用）
 
 ### POST请求
 ```python
 response = requests.post(url, headers=headers, json=data)
+```
+
+### 响应处理
+```python
+if response.status_code == 200:
+    return response.json()  # 解析JSON响应
+else:
+    raise Exception(f"API调用失败: {response.status_code}, {response.text}")
 ```
 
 **知识点：**
@@ -130,10 +319,12 @@ response = requests.post(url, headers=headers, json=data)
 - `url` - 请求的URL地址
 - `headers` - 请求头（包含认证信息等）
 - `json=data` - 将字典转换为JSON格式发送
+- `response.status_code` - HTTP状态码
+- `response.json()` - 将响应解析为Python字典
 
 ---
 
-## 7. 条件语句（Conditional Statement）
+## 12. 条件语句（Conditional Statement）
 
 ### if-else语句
 ```python
@@ -143,16 +334,63 @@ else:
     raise Exception(f"API调用失败: {response.status_code}, {response.text}")
 ```
 
+### if-elif-else语句
+```python
+if isinstance(data, list):
+    # 处理列表
+    pass
+elif isinstance(data, dict):
+    # 处理字典
+    pass
+else:
+    # 处理其他类型
+    pass
+```
+
+### 条件表达式
+```python
+if memory_content and memory_content.strip():
+    # memory_content不为空且去除空白后不为空
+    pass
+```
+
 **知识点：**
 - `if` 关键字用于条件判断
 - `==` 是相等比较运算符
+- `elif` 用于多个条件判断
 - `else` 处理不满足条件的情况
 - 代码块需要缩进
-- `raise Exception()` - 抛出异常
+- `and` 逻辑与，`or` 逻辑或
 
 ---
 
-## 8. 异常处理（Exception）
+## 13. 异常处理（Exception Handling）
+
+### try-except语句
+```python
+try:
+    if os.path.exists(memory_path):
+        with open(memory_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+except Exception as e:
+    print(f"⚠ 加载记忆失败: {e}")
+```
+
+### 多个异常处理
+```python
+try:
+    # 主程序代码
+    conversation_history = [{"role": "system", "content": system_message}]
+    while True:
+        # 对话循环
+        pass
+except KeyboardInterrupt:
+    # 用户按 Ctrl+C 中断程序
+    print("\n\n程序被用户中断")
+except Exception as e:
+    # 其他异常（API调用失败、网络错误等）
+    print(f"\n\n发生错误: {e}")
+```
 
 ### 抛出异常
 ```python
@@ -160,70 +398,176 @@ raise Exception(f"API调用失败: {response.status_code}, {response.text}")
 ```
 
 **知识点：**
+- `try-except` - 捕获和处理异常
+- `Exception as e` - 捕获所有异常，e是异常对象
+- `KeyboardInterrupt` - 键盘中断异常（Ctrl+C）
 - `raise` 关键字用于抛出异常
-- `Exception` 是异常类
 - f-string格式化字符串（Python 3.6+）
 
 ---
 
-## 9. 返回值（Return）
+## 14. 循环（Loop）
+
+### while True无限循环
+```python
+while True:
+    user_input = input("\n请输入你要说的话（输入\"再见\"退出）：")
+    
+    if user_input in ['再见']:
+        print("对话结束")
+        break  # 跳出循环
+    
+    # 其他操作
+    conversation_history.append({"role": "user", "content": user_input})
+```
+
+### break语句
+```python
+if reply_cleaned == "再见" or (len(reply_cleaned) <= 5 and "再见" in reply_cleaned):
+    print("\n对话结束")
+    break  # 跳出循环
+```
+
+**知识点：**
+- `while True:` - 无限循环，直到遇到break
+- `break` - 跳出循环
+- `continue` - 跳过本次循环，继续下一次
+- `in` 关键字用于检查元素是否在列表中
+
+---
+
+## 15. 列表操作
+
+### append() - 添加元素
+```python
+conversation_history.append({"role": "user", "content": user_input})
+conversation_history.append({"role": "assistant", "content": assistant_reply})
+role_prompt_parts.append(f"【角色设定】\n{personality}")
+```
+
+### 列表长度
+```python
+len(data)  # 获取列表长度
+len(reply_cleaned) <= 5  # 检查长度是否小于等于5
+```
+
+**知识点：**
+- `append()` - 在列表末尾添加元素
+- `len()` - 获取列表长度
+- 列表可以包含任意类型的元素（字典、字符串等）
+
+---
+
+## 16. 嵌套数据结构访问
+
+### 嵌套字典和列表
+```python
+result = call_zhipu_api(conversation_history)
+assistant_reply = result['choices'][0]['message']['content']
+```
+
+**知识点：**
+- 可以连续使用 `[]` 访问嵌套结构
+- `result['choices']` - 访问字典的键
+- `[0]` - 访问列表的第一个元素
+- `['message']` - 访问嵌套字典
+- `['content']` - 访问最终的值
+
+---
+
+## 17. 字符串格式化
+
+### f-string（推荐）
+```python
+print(f"✓ 已加载角色 '{role_name}' 的记忆: {memory_file} ({len(data) if isinstance(data, list) else 1} 条记录)")
+print(f"⚠ 记忆文件不存在: {memory_path}")
+print(f"⚠ 加载记忆失败: {e}")
+```
+
+### 字符串拼接
+```python
+system_message = role_system + "\n\n" + break_message
+print(portrait + "\n" + assistant_reply)
+```
+
+**知识点：**
+- f-string：`f"字符串 {变量}"` - Python 3.6+推荐方式
+- 可以在f-string中使用表达式
+- `+` 运算符用于字符串拼接
+- `join()` 方法用于连接字符串列表
+
+---
+
+## 18. 函数返回值（Return）
 
 ### 函数返回值
 ```python
-return response.json()  # 返回JSON解析后的数据
+def roles(role_name):
+    # ... 处理逻辑 ...
+    return role_system  # 返回完整的角色设定字符串
 ```
 
 **知识点：**
 - `return` 关键字用于返回函数结果
-- `response.json()` - 将HTTP响应解析为Python字典
+- 函数可以返回任意类型的值（字符串、字典、列表等）
+- 没有return语句的函数返回None
 
 ---
 
-## 10. 函数调用和字典访问
+## 19. 输入输出（Input/Output）
 
-### 调用函数
+### input() - 获取用户输入
 ```python
-result = call_zhipu_api(messages)
+user_input = input("\n请输入你要说的话（输入\"再见\"退出）：")
 ```
 
-### 访问嵌套字典
+### print() - 输出信息
 ```python
-print(result['choices'][0]['message']['content'])
-```
-
-**知识点：**
-- 函数调用：`函数名(参数)`
-- 字典访问：`字典['键']`
-- 列表访问：`列表[索引]`（索引从0开始）
-- 嵌套访问：可以连续使用 `[]` 访问嵌套结构
-
----
-
-## 11. 输出函数（Print）
-
-### 基本用法
-```python
-print(x + y)  # 输出字符串拼接结果
-print(result['choices'][0]['message']['content'])  # 输出API返回的内容
+print("✓ 已加载初始记忆，开始对话（对话记录不会保存）")
+print(portrait + "\n" + assistant_reply)
+print(f"\n\n发生错误: {e}")
 ```
 
 **知识点：**
-- `print()` 是Python内置函数
-- 用于在控制台输出信息
-- 可以输出字符串、数字、变量等
+- `input()` - 获取用户输入，返回字符串
+- `print()` - 输出信息到控制台
+- 可以输出字符串、变量、表达式结果
+- 可以使用f-string格式化输出
 
 ---
 
-## 12. 代码风格
+## 20. 代码风格和注释
 
-### 空行
-- 空行用于分隔代码块，提高可读性
-- 函数定义前后建议使用空行
+### 单行注释
+```python
+import os  # 新增：用于文件操作
+```
 
-### 缩进
-- Python使用缩进表示代码块
-- 通常使用4个空格（不是Tab）
-- 同一代码块必须保持相同缩进
+### 多行注释和文档字符串
+```python
+# ========== 初始记忆系统 ==========
+# 
+# 【核心概念】初始记忆：从外部JSON文件加载关于克隆人的基础信息
+# 这些记忆是固定的，不会因为对话而改变
+# 
+# 【为什么需要初始记忆？】
+# 1. 让AI知道自己的身份和背景信息
+# 2. 基于这些记忆进行个性化对话
+# 3. 记忆文件可以手动编辑，随时更新
+```
+
+### 代码块分隔
+```python
+# ========== 第一步：加载外部记忆 ==========
+# ========== 第二步：获取基础人格设定 ==========
+# ========== 第三步：整合记忆和人格 ==========
+```
+
+**知识点：**
+- `#` 用于单行注释
+- 三引号 `"""` 用于多行字符串和文档字符串
+- 使用注释说明代码功能
+- 使用分隔符组织代码结构
 
 ---
 
@@ -231,19 +575,33 @@ print(result['choices'][0]['message']['content'])  # 输出API返回的内容
 
 ### 基础概念
 1. ✅ 模块导入（import）
-2. ✅ 变量赋值
+2. ✅ 变量赋值和常量定义
 3. ✅ 字符串操作和拼接
 4. ✅ 函数定义和调用
 5. ✅ 字典和列表的使用
-6. ✅ 条件语句（if-else）
-7. ✅ 异常处理（raise）
-8. ✅ 返回值（return）
-9. ✅ 嵌套数据结构访问
-10. ✅ 输出函数（print）
+6. ✅ 文件操作（os模块）
+7. ✅ JSON数据处理
+8. ✅ 类型检查（isinstance）
+9. ✅ 列表推导式
+10. ✅ 字符串方法（strip, replace, join）
+11. ✅ 条件语句（if-elif-else）
+12. ✅ 异常处理（try-except）
+13. ✅ 循环（while, break）
+14. ✅ 列表操作（append, len）
+15. ✅ 嵌套数据结构访问
+16. ✅ 字符串格式化（f-string）
+17. ✅ 返回值（return）
+18. ✅ 输入输出（input, print）
+19. ✅ 代码风格和注释
 
 ### 实际应用
 - HTTP API调用
-- JSON数据处理
+- JSON文件读写
+- 文件路径操作
+- 数据解析和处理
+- 角色系统和记忆管理
+- 对话历史维护
+- 异常处理和错误提示
 - 函数封装和代码复用
 
 ---
@@ -252,8 +610,11 @@ print(result['choices'][0]['message']['content'])  # 输出API返回的内容
 
 1. **字符串 vs 数字**：`"1" + "2"` 结果是 `"12"`，而 `1 + 2` 结果是 `3`
 2. **缩进很重要**：Python依赖缩进来识别代码块
-3. **字典键访问**：使用 `字典['键']` 时，键必须存在，否则会报错
-4. **API密钥安全**：实际项目中不要将API密钥硬编码在代码中，应使用环境变量
-
-
-
+3. **字典键访问**：使用 `字典['键']` 时，键必须存在，否则会报错；使用 `字典.get('键')` 更安全
+4. **文件编码**：读取文件时指定 `encoding='utf-8'`，避免中文乱码
+5. **异常处理**：使用 `try-except` 处理可能出错的代码
+6. **文件操作**：使用 `with open()` 自动管理文件，确保文件正确关闭
+7. **路径拼接**：使用 `os.path.join()` 进行跨平台路径拼接
+8. **API密钥安全**：实际项目中不要将API密钥硬编码在代码中，应使用环境变量
+9. **类型检查**：使用 `isinstance()` 检查数据类型，比 `type()` 更推荐
+10. **列表推导式**：简洁高效，但复杂逻辑时建议使用普通循环提高可读性
