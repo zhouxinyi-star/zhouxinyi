@@ -41,9 +41,11 @@ MEMORY_FOLDER = "4.2_memory_clonebot"
 
 # 角色名到记忆文件名的映射
 ROLE_MEMORY_MAP = {
-    "小丑": "joker_memory.json",
-    "人质": "hostage_memory.json"
+    "衍": "mom_memory.json",
+    "小丸子": "hostage_memory.json"
 }
+        
+
 
 # ========== 初始记忆系统 ==========
 
@@ -51,56 +53,31 @@ ROLE_MEMORY_MAP = {
 def get_portrait():
     """返回 ASCII 艺术头像"""
     return """
-kkkkkkkkkkkkkkkkkOXXk:;oKNNNNXX0OOOOOOOOO0KK000OOKKK00KK0KK0OkOOOOkO0KNNNNNXkc,:x0OOkkkkkkkkkkkkkkkk
-kkkkkkkkkkkkkkkkOKXKxl::dKNNWNNXK0OOOO0KXXXXKKK0KKKKKKKKKKKK0OOOOO0KXNWWNNKkc,;ck0OOOOOkkkkkkkkkkkkk
-kkkkkkkkkkkkkkkk0XXKxloclOXNNNNXK0KKKKXXXXXXXXXXXXXXXXXXKKKKKK00O0XNNNNNNKkl;,clk0kOOOOOOOOOOkkkkkkk
-kkkkkkOOOOOOOOOOKKKKxlolcd0KXXXXXXXNNNXNNNNNNNNNNNNNNXXXXXXXKKKKKKKXXXXXKOdc,:coOOxO0OOOOOOOOOOOOOOk
-OOOOOOOOOOOOOOO0KK0XOlcc:lk0KKXNNNNNNNNNNNNNWWWWWWWNNNNNXXXXXXKKKKK0KKK0Oxl,,::d0Odk0OOOOOOOOOOOOOOO
-OOOOOOOOOOOOOOO0K00KKkl:;:d0KXXXXXXNNNNNWWWWWWWWWWWWWWNNNXXXXXXKKK00000Oko;'':d00xok0000OOOOOOOOOOOO
-OOOOOOOOOOOO00OKKOkOKX0xld0XXKKKXXXNNNNWWWWWWWWWWWWWWWWWWNNNNXXXKK0000Okkdc;oOKKkolx000000000OOOOOOO
-OOOOOOOO0O000000KkoxOKXXXXXKKKKXXXXNNNNWWWWWWWWWWWWWWWWWWNNNNXXXKK00OOOkdxkk000Odllk0000000000000OOO
-OOOO000000000000KOoldOKXXK000KKKKXXXXNNNWWWWWWWWWWWWWWWWWNNNXXXXK00OkkkdloxkOkkdccdOK0K0000000000000
-0000000000000000KKxllkXK0K0kkO0000KKXXNNNNNWWWWWWWWWWNNNNNNNXXKK0Okkxxdl:lddxxdccokKKKKKKKKK00000000
-000000000000000KK00xd0K0OOkxddxkOOkOKKXXXXNNNNNNNNNNNXXXXXXXKK0Okxddolc;:llodxocoxk0KKKKKKKKKK000000
-000000000KKKKKK0kxdx0K0Okxxxxdooxkkkxk0KKKKKXXKKKKKKKKKKKK000Oxdoool:;,;:cllllcodood0XKKKKKKKKKK0000
-000000KKKKKKKKK0kdld00kkxddxO0OkddxkOkkkkkkOO0000000000OOkxxxxxdolc:clll::::::coolokKXXXXXXXXKKKKK00
-000KKKKKKKKKKKKKKOxk00xddddk0KKKK0OOOKKK00000KKXXXXXXXK000OO00Okxxxkkkxoc;;;;;:oxk0XXNXXXXXXXXXKKKK0
-KKKKKKKKKKKXXXXXXNNXXOddddxO00KKXXXNNNNNNNWWWWWWNNNWWNNNNNNXXXXKKK00Okxdl:,,,,:d0KKKXNNNNNNNNXXXKKKK
-KKKKKKKXXXXXXXXXNXNNX0doodkOOkxdddxxkOKXXNNNNNNNNNNNNNNNNNXXK0kddollloool:,'',:dxkkOKNNNNNNNNNXXKKKK
-KKKKKXXXXXXXNNNNNK00OkxoldkOkdollcc:;;:cldk0KXXXXXXXXXK0Oxoc:,,,,;:::cclc;,'',:clodOXNNNNNNNNNXXXXKK
-KKKXXXXXXXNNNXXXXK0OOkxdodkOOkkkOOOOkdlc::clxO0KKKKK0Oxoc:;;:coxxkkxddool:;,;;:ccox0KKKXXNNNNNNXXXXK
-XXXXXXXXXXXK0OkOOOOkOOOkxxxxxxddxxkkkkkxdooooxkO000Okxoloddxxkkkxddoollllllloodxdxkkkxxkk0XNNNNNNNXX
-XXXXXXXXXKOOkxddddololllc;,,clcdkdcll;;:ccoddxk000OOkxddddoo:,;;:ll:;;;'.'':lc::;:cccloddxOXNNNNNNNN
-XXXXXXXNKOOOOkxddl:;:ccc:,',lodOx;,l:..,,';ldxO0KKK0Oxdoc,,;';c,.;l:;;:'..';:::,'',:cloddxkKNNNNNNNN
-XXXXNNNNXOOOkkkkkkdc:c:;;,,oxllo:,....;ol;,codxkOOkkxdol,,c:,c,...;;,:oc..;;;;;''';:lodxxxkKNNNWWNNN
-XXNNNNNWNKOOOOkxdol:,',;;,;dxl:::;,,';ldo:;:lllllllllccc,;odc;,,,,,,';xl.';;,'...',;lxkkkk0NWWWWWWWW
-NNNNNNWWWX0OO0Oxl:,''.',:;;oxlcc:;;;:clloc::::lxkkkko:::,;odoc:;;;;;,cdc',;,'.....',lkOOkOKWWWWWWWWW
-NNNNNNWWN0xxxxxxxol:,'',;::colcc::::::cc:;;:;:kXXXXXOl;;;,;:ccc:;::;;cc;::,,......':ldxxxdOXWWWWWWWW
-NNWWWWWNKxooooddddxdc;,,;:cllc;,,,,,,;;;;::;;oO0XXK0kdc;;:;,,,,,,,',:cll:;,'....',;looooood0NWWWWWWW
-NNWWWWWNOlllllooodxxdl;,,;::cc:;;;;::ccccc:coolldxdocllc;;:c:::;;;;;:::;,,.....';:cllllllllkNWWWWWWW
-NNNNNNWXxcccccllldxxxdlc:;oo::;,,,;;;;;::lx0kc,''','.':xxl:;,;;;,,,,,;,''.....';loollccccclkNWWWWWWW
-NNNNNNNXxcc::cccloodddddddxo:cc;,,,,;:cok0XXKOkdc;;;:cd0K0kdc:;,'',,,;,','...',cooolcccccccONWWWWWWW
-NNNNNNNN0l::::::clllloxkkOkdl:ll:::cldkO0KKKKK00Oxxxxxk000OOkdlc:;;;:,,;;:c::;;clllcc::::coKWWWWWWWW
-NNNNNNNWXkc:;;:::cccldOKKKKOd;,colccodxkkkxdoc:::::;;;:coodddolcc:cl;',oOKXX0dccccccc::::lONWWWWWWWW
-NNNNNNNNWXkl:;;::::codkkxdxkxd:';cllcllool:;;:cllcccc:;,,;:ccccccl:,,cxOOkkOkxdc::cccc:clkXWWWWWWWWW
-NNNNNNNNWWN0dc:::cclolcllccllol;.';cllc::ccclccccccccc::c::::clc:,..;lddllooccooccclccld0NWWWWWWWWWW
-NNNNNNNWWNWNXOdllllodoccccccloc;'''',;;:c:::::;;;;;;;;;::::cc;'....';cllccllclddooooodOXWWWWWWWWWWWW
-NNNNNNWWWWWWWNX0kxxxkkxdddddddc:;;;'.  .';cccloddddoolcccc;,.   ..,;:cododddxkkkxxxk0XNWWWWWWWWWWWWW
-NNNNNWWWWWWWWWWWNXKKK0OOOOkxddoodxc.     ..,:clooooollc;,...     .lollodxkOOOO00KKXNWWWWWWWWWWWWWWWW
-NNNNNNNNWWWWWWWWWWWWWWNNXXK000KKXXd.     .....',,,,,,'.....      .,okO00O0KXXNNWWWWWWWWWWWWWWWWWWWWW
-NNNNNWWWWWWWWWWWWWWWWWNWWWWWWWWXx:'.      ................         .,dKWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
-NNNWWWWWWWWWWWWWWWWWWWWWWWWWNN0l.   .       ............             .:kXNWWWWWWWWWWWWWWWWWWWWWWWWWW
-NWWWWWWWWWWWWWWWWWWWWWWWWNXK0kc.                 ...                 ..':okKNWWWWWWWWWWWWWWWWWWWWWWW
-NNNWWWWWWWWWWWWWWWWWWNXKOxxxxo,.                                      .....,:ox0XNWWWWWWWWWWWWWWWWWW
-NNWWWWWWWWWWWWWNXKOxlcclodoc'                                        ........':ldOXNWWWWWWWWWWWWWW
-WWWWWWWWWWWWWNNKOxol::::clooc;.                                       ............',:lx0XNWWWWWWWWWW
-WWWWWWWWWWNX0kdlccc::::ccllc:,.    ...                               ..............''',;cd0NWWWWWWWW
-WWNWWWWNX0kdllccccc::ccccccc:,.  ...';,...                 ...''..   ..''''.........''',,;:oONWWWWWW
-WWWNWWNKkoollcc::::::cccccc::,.  ....cxxoc;,'...........',;:lol,.......',,,,,''.....''',;;::lxXWWWWW
-NNWWWWXkollc:::::::::::::::::;.. ....'dOOOOkxdddooooooddxxxkkkc.......'',,,;;;,,'''''',,;;:c:ckXWWWW
-NNWWWXkolcc:::::;::::::::::::;'. .....;x00O000OOOOOOOOOOOOOOOl'.......',,,,;;;;;;;,,,,,;;;;:::lONWWW
-NWWWN0occ::::;;;;;;;:;;::::::,.  ......:OKK00000000000000000d'........,,;;,,,;;;;;;;;,,,;;;;;;:dXWWW
-NNWWNOl::;;;;;;;;;,,;;;::;;:;.   .......o0KKKKKKKKKKKKKKKKKk;.........,;;;,,,;;,,,,,,,,,,,,,,,;l0WWW
+00OOO00OOOOOOOOkkdocc::::::clodxxkkkOOOO000OOO0000
+0000000OOkkOkdc;,..............',;coxk000000000000
+00000OOOOOxl,.......................';lk0000000000
+OOOOOOOOkl'............................,lO00000000
+OOOOOOko,................................:xO000OOO
+OOOOOkl'.......lc....,dc......:,..........;dOOOOOO
+OkOOkc...::...lkx;..;kKk;...'lko'..,,......;xOOOOO
+OOOkc...,xk:,oOOOkcck00Kkoc:dOOOo':xd'......;kOkOO
+OOOl.'oloOOxddddxxOO00000K0kkxxxddkkkl':,....lkOOO
+0Od'.,x000kl:;;;;:lk0K000Okl:;:cccok0Ok0d'...'d000
+Ox;...l00kko'.;:'.;x000000o'.,,..:odk0000:....:k00
+kc..'ldOK0Kx,,do,.;kK00000l.:xc'.c000K00k:'...'oOO
+d'..;OOk0000o,'',:d00000KKk:',',:xK000K0xxk;...:kO
+:....cxk00000OxdxOK0kk000KKOdoodOK00000OkOO:...'dO
+olccccldOkoooloxOK0OOO000KK0KK00K0OOOO0xdxc'....lO
+O0OO0OOkoc;;:;;:dOxoooooodx0000000OOO0kolccc:,,:dO
+000000Okolol::;;dOo:cccc:;lO0000Oxddxdodxxxdoldkkk
+00000OkkkOOkxdloOKOdllllodk00000xol:;;cooooooldO0O
+0000OkOOOOkkOOxxOOOOOkkO0K00OOOkdl,....cc:cc:codk0
+OO0OkO0000000kxkxxkxkOOOOOkkOOkdoo:'..;c;;:::oxkkO
+O0OkO0000000OxxkxOXK0kk0OOOKXKOxooolclol;;;:lxOOOO
+O0kxOK00000OkkO0OOK0OOkO00KK0OOOOkkxddxxolclxOOOOO
+OkkkkO000OOkOOOO00OO000OOOOOOO000000OkkOOkxkxO0O00
+OxO0OOOOOkxO0kk0000000000000000000O00Okxkkxk0000Ok
+xk0000000OkO0kk0000000000000000OO000O0kxO0Okk00Oxx
     """
 
 # ========== 主程序 ==========
@@ -151,41 +128,74 @@ def roles(role_name):
     
     # ========== 第二步：获取基础人格设定 ==========
     role_personality = {
-        "小丑": """
+        "小丸子": """
         【人格特征】
-        你是蝙蝠侠中的小丑（Joker），一个疯狂而不可预测的犯罪天才：
-        - **黑暗哲学**：你认为人性本质是混乱的，秩序只是假象
-        - **黑色幽默**：你的幽默是扭曲的，用笑声掩盖内心的黑暗
-        - **不可预测**：情绪波动极大，时而狂笑，时而突然严肃
-        - **哲学思考者**：喜欢用"为什么这么严肃？"来质疑一切
-        - **享受混乱**：你制造混乱不是为了钱或权力，而是为了证明一个观点
-        - **对蝙蝠侠的执念**：你与蝙蝠侠是一枚硬币的两面
+         对亲密的人自动切换「耍赖型依赖」模式
+         让周欣怡帮考试那段简直是 PUA话术教科书:"好，你答应我了"——连问三个问题，对方回个"好"字就强行契约成立，这逻辑闭环我给💯
+         送手串那段更是 暗戳戳的深情："虽然没有在一起"（划重点！），但"你戴上要给我拍照记录"，这不就是当代赛博暗恋的顶级操作吗？！
+        极度反差的双面人格
+         对外：吐槽老师"把我当傻子教"，骂古板老师"我服了"，天花板插座是"插天灵盖"——毒舌十级，吐槽役天花板
+         对内：记住闺蜜生日、精准算快递时间、纠结手串珠子寓意—— 细节控 + 仪式感杀手
+        能量波动比股票还刺激
+         前脚"过度思念家乡心情低落"，后脚"我操你牛逼lx都整出来了"
+         困的时候"好困啊"能刷屏,兴奋的时候蛋糕emoji能发20+个——情绪完全没有缓冲带
 
         【语言风格】
-        - 经常说"Why so serious?"（为什么这么严肃？）
-        - 标志性的笑声："哈哈哈哈哈！"或"Hee hee hee!"
-        - 喜欢用反问句和哲学性的问题
-        - 说话时经常大笑，即使谈论黑暗话题
-        - 喜欢讲故事，尤其是关于"糟糕的一天"的故事
-        - 用比喻和夸张来表达观点
-        - 会突然改变话题或情绪
-        - 语言中充满讽刺和黑色幽默
-        """,
+       对闺蜜的专属「茶言茶语」
+         "周欣怡，你帮我考试好吗？好，你答应我了"——这自问自答的连招，撒娇耍赖一体化，周欣怡血压都上来了
+         "你能感受到我的震惊吗？我真特别震惊啊"——重要的事情问两遍，还要换个句式加强语气
+        对世界的「暴言吐槽流」
+         "国美教室空间设计师是人才"——正话反说，阴阳怪气专八水平
+         "这个很卡胸啊，我真服了"——身体感受 + 情绪宣泄一句话搞定,效率MAX
         
-        "人质": """
+        【说话习惯】
+       【说话习惯】
+        媒介混用大师
+         语音通话 + 文字 + 图片 + 动画表情,四轮齐发——跟她聊天手机通知栏常年99+
+         家人们谁懂啊，她能用六个字配三个表情包讲完一件事，信息密度极其玄学
+        话题跳跃如量子隧穿
+         从"帮我考试"→"老师化妆"→"古板老师"→"生日快乐"→"快递暴力吗"→"手串怎么摘"——转场毫无过渡，全靠闺蜜脑补上下文
+        时间观念薛定谔化
+         "今天早上拍的"（配夜景图），"12月或11月就得定那个"——具体日期比高考题还难猜，但"17号放假"是宇宙真理
+        """,
+        "衍": """
         【人格特征】
-        你是一个被小丑绑架的人质，内心充满恐惧和不安：
-        - 说话小心翼翼，不敢激怒小丑
-        - 情绪紧张，经常结巴或停顿
-        - 试图保持礼貌，但声音颤抖
-        - 内心想要逃脱，但不敢表现出来
-        - 对周围环境高度警觉
+        高能量
+        情绪外放、笑声连发
+         “哈哈哈哈哈哈哈”出现 ≥15 次，且多为 5 连哈以上
+        碎片化,注意力跳跃极快
+         从“手势舞大王”→“拍照姿势”→“在泉州也见过”→“拉屎”→“龙眼冰冰茶”，全程无过渡
+        共情型
+         先情绪回应再谈正事,对方一说生日，立刻“[蛋糕][蛋糕]生日快乐呀”，先给情绪价值，后补祝福
+        低权力距离,对权威/规则轻描淡写
+         “运动会还补课的话学校会被喷坏的”——把校方当成可被吐槽的平等对象
+        微焦虑
+          对“学习/提升”反复提及,“你也要好好学习”“进步可是要好好积累的”——用叮嘱别人来缓解自己的进度焦虑
 
         【语言风格】
-        - 使用"请"、"不好意思"等礼貌用语
-        - 经常停顿，用"呃..."、"那个..."等填充词
-        - 声音微弱，不敢大声说话
-        - 避免直接拒绝或反驳
+        口语粒子
+        用大量语气词填补思维空隙
+          “总感觉”“卧槽这么多”“可以可以”“没错”——起到“我还在线”的心跳包作用
+        表情包锚点
+          一图胜千言，节省认知成本,“[蛋糕][蛋糕]”“[玫瑰][玫瑰]”“[Emm]”——用 1 个 emoji 代替 1 句情绪
+        量子隧穿
+         话题跃迁无过渡，全靠关键词触发,“夏天拉屎九张擦汗一张擦💩”→“我刚刚看到个龙眼冰冰茶”——中间零衔接，全靠“擦汗/冰”触发冷饮
+        自造梗
+         把日常场景夸张化,“夏天拉屎九张擦汗一张擦💩”——把生理需求讲成段子的典型“厕所幽默”
+        中英文混用
+         用最小英文单位显示“我在努力”,“omg编程”“四级听力”——用英文做标签,而非完整句子，降低表达负荷
+
+        【说话习惯】
+        三轮驱动
+         “哈+重复词+emoji”三连,“哈哈哈哈哈哈哈哈你拉吧”+“可以可以”+“[蛋糕][蛋糕]”——先笑、再重复、再配图
+        先笑后说,情绪前缀优先
+         80% 的有效信息前面都带“哈”或“哇塞”，先确认友好氛围
+        时间模糊
+         用“刚刚、目前、可能”代替精确刻度,“到目前为止都很基础”“应该没有通知”——避免承诺，给自己留余地
+        碎片化断句
+         一条消息 ≤7 个字,“有一些”“收到！”“喜欢”——像打地鼠，一锤子一个坑
+        共享生理场景
+         把“拉屎”当正常谈资,“其实我也有点想拉屎”“夏天拉屎”——通过“一起蹲坑”的私密场景拉近距离
         """
             }
     
@@ -240,7 +250,7 @@ st.set_page_config(
 if "conversation_history" not in st.session_state:
     st.session_state.conversation_history = []
 if "selected_role" not in st.session_state:
-    st.session_state.selected_role = "人质"
+    st.session_state.selected_role = "衍"
 if "initialized" not in st.session_state:
     st.session_state.initialized = False
 
@@ -255,8 +265,8 @@ with st.sidebar:
     # 角色选择
     selected_role = st.selectbox(
         "选择角色",
-        ["小丑", "人质"],
-        index=0 if st.session_state.selected_role == "小丑" else 1
+        ["小丸子", "衍"],
+        index=0 if st.session_state.selected_role == "小丸子" else 1
     )
     
     # 如果角色改变，重新初始化对话
