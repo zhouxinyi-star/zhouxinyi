@@ -28,7 +28,7 @@ st.set_page_config(
 if "conversation_history" not in st.session_state:
     st.session_state.conversation_history = []
 if "selected_role" not in st.session_state:
-    st.session_state.selected_role = "小丸子"
+    st.session_state.selected_role = "小丑"
 if "initialized" not in st.session_state:
     st.session_state.initialized = False
 
@@ -56,12 +56,38 @@ with st.sidebar:
         st.rerun()
     
     st.markdown("---")
+    st.markdown("### 🔗 JSONBin 配置")
+    st.caption("用于同步消息到 Unity ChatDollKit（可选）")
+    
+    bin_id = st.text_input(
+        "Bin ID",
+        value=st.session_state.get("jsonbin_bin_id", ""),
+        type="default",
+        help="在 JSONBin.io 控制台获取你的 Bin ID"
+    )
+    st.session_state.jsonbin_bin_id = bin_id
+    
+    access_key = st.text_input(
+        "Access Key",
+        value=st.session_state.get("jsonbin_access_key", ""),
+        type="password",
+        help="在 JSONBin.io 控制台的 API Keys 页面获取"
+    )
+    st.session_state.jsonbin_access_key = access_key
+    
+    if bin_id and access_key:
+        st.success("✅ JSONBin 已配置")
+    else:
+        st.warning("⚠️ 未配置 JSONBin，消息不会同步到 Unity")
+    
+    st.markdown("---")
     st.markdown("### 📝 说明")
     st.info(
         "- 选择角色后开始对话\n"
         "- 对话记录不会保存\n"
         "- AI的记忆基于初始记忆文件\n"
-        "- 回复会同步到Unity ChatDollKit"
+        "- 配置 JSONBin 后，回复会同步到 Unity ChatDollKit\n"
+        "- 在 JSONBin.io 注册账号并创建 Bin 后填入配置"
     )
 
 if not st.session_state.initialized:
@@ -84,7 +110,9 @@ for msg in st.session_state.conversation_history[1:]:
             st.write(msg["content"])
 
 if st.query_params.get("poll") == "true":
-    result = get_latest_reply()
+    bin_id = st.session_state.get("jsonbin_bin_id", "")
+    access_key = st.session_state.get("jsonbin_access_key", "")
+    result = get_latest_reply(bin_id, access_key)
     st.json(result)
     st.stop()
 
@@ -104,7 +132,15 @@ if user_input:
         with st.spinner("思考中..."):
             try:
                 role_prompt = get_role_prompt(st.session_state.selected_role)
-                reply = chat_once(st.session_state.conversation_history, user_input, role_prompt)
+                bin_id = st.session_state.get("jsonbin_bin_id", "")
+                access_key = st.session_state.get("jsonbin_access_key", "")
+                reply = chat_once(
+                    st.session_state.conversation_history, 
+                    user_input, 
+                    role_prompt,
+                    bin_id if bin_id else None,
+                    access_key if access_key else None
+                )
                 
                 st.write(reply)
                 
