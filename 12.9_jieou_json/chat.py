@@ -1,20 +1,19 @@
 from api import call_zhipu_api
-from roles import get_role_prompt
+from roles import get_break_rules
+from jsonbin import save_latest_reply
 
-def chat_once(history, user_input, role_name="小丸子"):
-    """进行一次对话交互，返回AI的回复内容"""
-    # 将用户输入添加到对话历史
+def chat_once(history, user_input, role_prompt, bin_id=None, access_key=None):
     history.append({"role": "user", "content": user_input})
     
-    # 构造API调用消息
-    system_message = get_role_prompt(role_name)
+    system_message = role_prompt + "\n\n" + get_break_rules()
     api_messages = [{"role": "system", "content": system_message}] + history[1:]
     
-    # 调用API获取AI回复
     result = call_zhipu_api(api_messages)
-    assistant_reply = result['choices'][0]['message']['content']
+    reply = result['choices'][0]['message']['content']
     
-    # 将AI回复添加到对话历史
-    history.append({"role": "assistant", "content": assistant_reply})
+    history.append({"role": "assistant", "content": reply})
     
-    return assistant_reply
+    if bin_id and access_key:
+        save_latest_reply(reply, bin_id, access_key)
+    
+    return reply
