@@ -7,7 +7,7 @@ from chat import chat_once
 from jsonbin import get_latest_reply
 
 def get_portrait():
-    return """
+    return r"""
  ______     ____     _           __                             
 /_  __/__ _/ / /__  (_)__   ____/ /  ___ ___ ____               
  / / / _ `/ /  '_/ / (_-<  / __/ _ \/ -_) _ `/ _ \              
@@ -28,7 +28,7 @@ st.set_page_config(
 if "conversation_history" not in st.session_state:
     st.session_state.conversation_history = []
 if "selected_role" not in st.session_state:
-    st.session_state.selected_role = "小丑"
+    st.session_state.selected_role = "小丸子"
 if "initialized" not in st.session_state:
     st.session_state.initialized = False
 
